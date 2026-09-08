@@ -1,0 +1,23 @@
+@startuml
+title AD-07 : Melihat Riwayat & Status Reservasi
+skinparam style strictuml
+skinparam titleFontSize 14
+
+|Pengguna|
+start
+:Akses menu "Riwayat Reservasi";
+
+|Sistem|
+:Ambil data reservasi milik pengguna dari database;
+:Tampilkan tabel riwayat reservasi\n(Fasilitas, Waktu, Tujuan, Status);
+
+|Pengguna|
+:Pilih dan klik salah satu baris reservasi;
+
+|Sistem|
+:Tampilkan pop-up modal detail lengkap reservasi\n(Status, Catatan petugas jika ditolak);
+
+|Pengguna|
+:Melihat informasi detail;
+stop
+@enduml

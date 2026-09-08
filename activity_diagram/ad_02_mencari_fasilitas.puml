@@ -1,0 +1,26 @@
+@startuml
+title AD-02 : Mencari Fasilitas
+skinparam style strictuml
+skinparam conditionStyle insideDiamond
+skinparam titleFontSize 14
+
+|Pengguna|
+start
+:Buka halaman katalog fasilitas;
+:Masukkan kata kunci atau pilih filter\n(Tipe / Lokasi / Kapasitas);
+:Tekan tombol "Cari / Filter";
+
+|Sistem|
+:Proses query pencarian fasilitas di database;
+if (Fasilitas sesuai filter ditemukan?) then (Ditemukan)
+    :Tampilkan daftar fasilitas hasil pencarian;
+    |Pengguna|
+    :Melihat daftar fasilitas hasil filter;
+    stop
+else (Tidak Ada Hasil)
+    |Sistem|
+    :Tampilkan notifikasi "Fasilitas tidak ditemukan";
+    |Pengguna|
+    stop
+endif
+@enduml

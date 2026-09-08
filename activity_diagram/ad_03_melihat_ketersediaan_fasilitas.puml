@@ -1,0 +1,25 @@
+@startuml
+title AD-03 : Melihat Ketersediaan Fasilitas
+skinparam style strictuml
+skinparam conditionStyle insideDiamond
+skinparam titleFontSize 14
+
+|Pengguna|
+start
+:Pilih fasilitas yang ingin dicek;
+:Tentukan tanggal jadwal;
+
+|Sistem|
+:Ambil data reservasi fasilitas pada tanggal tersebut;
+if (Koneksi & data jadwal berhasil dimuat?) then (Berhasil)
+    :Tampilkan matriks slot waktu operasional 07.00-20.00\n(Interval 30 menit) dengan status Tersedia/Tidak Tersedia;
+    |Pengguna|
+    :Melihat ketersediaan slot waktu;
+    stop
+else (Gagal)
+    |Sistem|
+    :Tampilkan pesan error "Gagal memuat jadwal";
+    |Pengguna|
+    stop
+endif
+@enduml

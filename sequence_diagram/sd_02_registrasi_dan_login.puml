@@ -1,0 +1,84 @@
+@startuml
+title SD-02 : Registrasi Akun Mandiri & Login (UC-04 & UC-05)
+skinparam style strictuml
+skinparam sequenceMessageAlign center
+skinparam titleFontSize 14
+autonumber
+
+actor "Pengguna" as User
+boundary "AuthView\n(Register/Login Page)" as View
+control "AuthController" as Controller
+entity "User" as UserModel
+database "MySQL Database" as DB
+
+== Alur Registrasi Akun Mandiri (UC-04) ==
+
+User -> View : Isi data (Nama, Email, Password, Konfirmasi, Kategori) & Submit
+activate View
+
+View -> Controller : register(RegisterRequest)
+activate Controller
+
+Controller -> UserModel : where('email', email)->exists()
+activate UserModel
+UserModel -> DB : SELECT id FROM users WHERE email = ? LIMIT 1
+activate DB
+DB --> UserModel : Result exists (boolean)
+deactivate DB
+UserModel --> Controller : emailExists
+deactivate UserModel
+
+alt Email Sudah Terdaftar
+    Controller --> View : redirectBackWithErrors("Email sudah terdaftar")
+    View --> User : Tampilkan pesan error validasi email
+else Email Belum Terdaftar
+    Controller -> Controller : hashPassword(password)
+    Controller -> UserModel : create(data, status_verification='pending')
+    activate UserModel
+    UserModel -> DB : INSERT INTO users (name, email, password, role, status_verification) \nVALUES (?, ?, ?, 'user', 'pending')
+    activate DB
+    DB --> UserModel : userCreated (ID)
+    deactivate DB
+    UserModel --> Controller : userInstance
+    deactivate UserModel
+
+    Controller --> View : redirect('/login')->with("Registrasi berhasil, akun menunggu verifikasi Admin")
+    deactivate Controller
+    View --> User : Tampilkan pesan sukses & arahan menunggu verifikasi
+    deactivate View
+end
+
+== Alur Login Pengguna (UC-05) ==
+
+User -> View : Masukkan Email & Password -> Klik "Login"
+activate View
+
+View -> Controller : login(LoginRequest)
+activate Controller
+
+Controller -> UserModel : where('email', email)->first()
+activate UserModel
+UserModel -> DB : SELECT * FROM users WHERE email = ? LIMIT 1
+activate DB
+DB --> UserModel : userData / null
+deactivate DB
+UserModel --> Controller : userInstance
+deactivate UserModel
+
+alt Kredensial Tidak Ditemukan / Password Salah
+    Controller --> View : redirectBackWithErrors("Email atau password salah")
+    View --> User : Tampilkan error kredensial tidak valid
+else Kredensial Cocok
+    alt Akun Belum Diverifikasi Admin (status_verification != 'verified')
+        Controller --> View : redirectBackWithErrors("Akun Anda masih menunggu verifikasi Admin")
+        View --> User : Tampilkan peringatan akun belum aktif
+    else Akun Terverifikasi (status_verification == 'verified')
+        Controller -> Controller : Auth::login(user) -> createSession()
+        Controller --> View : redirect('/dashboard')
+        deactivate Controller
+        View --> User : Masuk ke Dashboard Utama Pengguna
+        deactivate View
+    end
+end
+
+@enduml

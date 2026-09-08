@@ -1,0 +1,39 @@
+@startuml
+title AD-06 : Mengajukan Reservasi Fasilitas
+skinparam style strictuml
+skinparam conditionStyle insideDiamond
+skinparam titleFontSize 14
+
+|Pengguna|
+start
+:Pilih fasilitas yang ingin dipesan;
+:Buka form reservasi;
+
+|Sistem|
+:Tampilkan form pengajuan reservasi;
+
+|Pengguna|
+:Isi form reservasi:\n1. Pilih tanggal\n2. Masukkan Start Time & End Time\n3. Tuliskan tujuan penggunaan;
+:Klik tombol "Ajukan Reservasi";
+
+|Sistem|
+:Validasi aturan waktu & jadwal (Server-side);
+if (Waktu 07.00-20.00 & kelipatan 30 menit?) then (Ya)
+    if (Slot waktu bebas dari bentrok jadwal?) then (Tersedia)
+        :Simpan reservasi (Status: 'Menunggu Persetujuan');
+        :Tampilkan notifikasi berhasil diajukan;
+        |Pengguna|
+        stop
+    else (Bentrok)
+        |Sistem|
+        :Tampilkan notifikasi error "Jadwal bentrok";
+        |Pengguna|
+        stop
+    endif
+else (Di luar jam / Bukan kelipatan 30m)
+    |Sistem|
+    :Tampilkan error validasi aturan waktu;
+    |Pengguna|
+    stop
+endif
+@enduml

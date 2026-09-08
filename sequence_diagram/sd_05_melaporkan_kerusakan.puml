@@ -1,0 +1,52 @@
+@startuml
+title SD-05 : Melaporkan Kerusakan Fasilitas dengan Bukti Foto (UC-09)
+skinparam style strictuml
+skinparam sequenceMessageAlign center
+skinparam titleFontSize 14
+autonumber
+
+actor "Pengguna" as User
+boundary "ReportView\n(Form Lapor Kerusakan)" as View
+control "ReportController" as Controller
+control "FileStorageService" as Storage
+entity "Report" as ReportModel
+database "MySQL Database" as DB
+
+User -> View : Isi form (Fasilitas, Kategori, Deskripsi, Upload Foto) -> Klik "Kirim Laporan"
+activate View
+
+View -> Controller : store(StoreReportRequest)
+activate Controller
+
+== Validasi Format Data & Berkas Foto ==
+Controller -> Controller : validate(fields, photo: required|image|mimes:jpg,jpeg,png|max:2048)
+
+alt Foto Tidak Valid (Bukan Gambar / Ukuran > 2MB / Kosong)
+    Controller --> View : redirectBackWithErrors("Format file tidak valid atau ukuran file terlalu besar")
+    View --> User : Tampilkan error validasi berkas foto
+else Form Lengkap & Foto Valid
+    == Penyimpanan Berkas Foto ke Storage ==
+    Controller -> Storage : storeFile(uploadedFile, 'reports')
+    activate Storage
+    Storage -> Storage : generateUniqueFilename()
+    Storage -> Storage : saveToDisk('public/reports', file)
+    Storage --> Controller : photoPath (misal: "reports/abc123_bukti.jpg")
+    deactivate Storage
+
+    == Penyimpanan Rekod Laporan ke Database ==
+    Controller -> ReportModel : create(userId, facilityId, category, description, photoPath, status='baru')
+    activate ReportModel
+    ReportModel -> DB : INSERT INTO reports (user_id, facility_id, category, description, photo_path, status) \nVALUES (?, ?, ?, ?, ?, 'baru')
+    activate DB
+    DB --> ReportModel : newReportId
+    deactivate DB
+    ReportModel --> Controller : reportInstance
+    deactivate ReportModel
+
+    Controller --> View : redirect('/my-reports')->with("Laporan kerusakan berhasil dikirim ke petugas")
+    deactivate Controller
+    View --> User : Tampilkan pesan sukses & tampilkan tiket status 'Baru'
+    deactivate View
+end
+
+@enduml

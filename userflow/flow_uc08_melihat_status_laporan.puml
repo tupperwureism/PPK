@@ -1,0 +1,39 @@
+@startuml
+skinparam defaultTextAlignment center
+skinparam roundcorner 12
+skinparam shadowing false
+skinparam ArrowColor #5D6D7E
+skinparam ArrowFontSize 10
+
+skinparam rectangle {
+    BackgroundColor #FFFFFF
+    BorderColor #BDC3C7
+    BorderThickness 1.5
+    FontName Arial
+    FontSize 11
+}
+
+skinparam database {
+    BackgroundColor #2C3E50
+    BorderColor #1A252F
+    FontColor white
+    FontName Arial
+    FontSize 11
+    FontStyle bold
+}
+
+rectangle "<color:white><b>Start</b></color>" as Start #4D6BFE
+rectangle "Buka Menu\n'Status Laporan Saya'" as Step_1
+database "Database\nLaporan" as DB_Report
+rectangle "Tampilkan Tabel Laporan\n(Status: Baru/Diproses/Selesai/Ditolak)" as Step_2
+rectangle "Klik Baris Laporan\nuntuk Melihat Detail" as Step_3 #FAD7A0
+rectangle "Tampilkan Detail, Foto Bukti,\ndan Catatan Resolusi Petugas" as Step_4 #D4EFDF;line:27AE60
+rectangle "<color:white><b>End</b></color>" as End #4D6BFE
+
+Start -right-> Step_1
+Step_1 -right-> DB_Report
+DB_Report -right-> Step_2
+Step_2 -right-> Step_3
+Step_3 -right-> Step_4
+Step_4 -right-> End
+@enduml

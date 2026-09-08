@@ -1,0 +1,46 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+skinparam actorStyle awesome
+
+actor "Pengunjung" as pengunjung
+actor "Pengguna\n(Mahasiswa / Dosen / Staf)" as pengguna
+
+pengguna --|> pengunjung
+
+rectangle "Sistem Reservasi & Pelaporan Fasilitas Kampus" {
+    usecase "UC-01: Melihat Daftar Fasilitas" as UC_01
+    usecase "UC-02: Mencari Fasilitas" as UC_02
+    usecase "UC-03: Melihat Ketersediaan Fasilitas" as UC_03
+    usecase "UC-04: Melakukan Registrasi Akun" as UC_04
+    usecase "UC-05: Melakukan Login & Logout" as UC_05
+    usecase "UC-06: Mengajukan Reservasi Fasilitas" as UC_06
+    usecase "UC-07: Melihat Riwayat & Status Reservasi" as UC_07
+    usecase "UC-08: Membatalkan Reservasi" as UC_08
+    usecase "UC-09: Membuat Laporan Kerusakan" as UC_09
+    usecase "UC-10: Melihat Status & Riwayat Laporan" as UC_10
+}
+
+pengunjung --> UC_01
+pengunjung --> UC_02
+pengunjung --> UC_03
+
+pengguna --> UC_04
+pengguna --> UC_05
+pengguna --> UC_06
+pengguna --> UC_07
+pengguna --> UC_08
+pengguna --> UC_09
+pengguna --> UC_10
+
+' Exact top-to-bottom sequence
+UC_10 -[hidden] UC_09
+UC_09 -[hidden] UC_08
+UC_08 -[hidden] UC_07
+UC_07 -[hidden] UC_06
+UC_06 -[hidden] UC_05
+UC_05 -[hidden] UC_04
+UC_04 -[hidden] UC_03
+UC_03 -[hidden] UC_02
+UC_02 -[hidden] UC_01
+@enduml

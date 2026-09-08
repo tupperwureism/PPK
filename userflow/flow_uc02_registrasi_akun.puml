@@ -1,0 +1,53 @@
+@startuml
+skinparam defaultTextAlignment center
+skinparam roundcorner 12
+skinparam shadowing false
+skinparam ArrowColor #5D6D7E
+skinparam ArrowFontSize 10
+
+skinparam rectangle {
+    BackgroundColor #FFFFFF
+    BorderColor #BDC3C7
+    BorderThickness 1.5
+    FontName Arial
+    FontSize 11
+}
+
+skinparam card {
+    BackgroundColor #FEF9E7
+    BorderColor #F1C40F
+    BorderThickness 1.5
+    FontName Arial
+    FontSize 11
+    FontStyle bold
+}
+
+skinparam database {
+    BackgroundColor #2C3E50
+    BorderColor #1A252F
+    FontColor white
+    FontName Arial
+    FontSize 11
+    FontStyle bold
+}
+
+rectangle "<color:white><b>Start</b></color>" as Start #4D6BFE
+rectangle "Buka Halaman\nRegistrasi Akun" as Step_1
+rectangle "Isi Data Form\n(Nama, Email, Password, Role)" as Step_2 #FAD7A0
+card "◇ Form Valid &\nEmail Belum Terdaftar?" as Dec_1
+database "Database\nPengguna" as DB_User
+rectangle "Notifikasi Sukses\n(Menunggu Verifikasi Admin) &\nRedirect ke Login" as Step_3 #D4EFDF;line:27AE60
+rectangle "Tampilkan Pesan Error\nValidasi / Email Terdaftar" as Step_Err #FDEDEC;line:E74C3C
+rectangle "<color:white><b>End</b></color>" as End #4D6BFE
+
+Start -right-> Step_1
+Step_1 -right-> Step_2
+Step_2 -right-> Dec_1
+
+Dec_1 -right-> DB_User : Valid
+DB_User -right-> Step_3
+Step_3 -right-> End
+
+Dec_1 -down-> Step_Err : Tidak Valid
+Step_Err -right-> End
+@enduml

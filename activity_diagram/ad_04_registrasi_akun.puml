@@ -1,0 +1,32 @@
+@startuml
+title AD-04 : Melakukan Registrasi Akun
+skinparam style strictuml
+skinparam conditionStyle insideDiamond
+skinparam titleFontSize 14
+
+|Pengguna|
+start
+:Buka halaman registrasi;
+
+|Sistem|
+:Tampilkan form registrasi;
+
+|Pengguna|
+:Isi data akun\n(Nama, Email, Password, Kategori);
+:Klik tombol "Daftar";
+
+|Sistem|
+:Validasi kelengkapan & format data (Server-side);
+if (Data valid & email belum terdaftar?) then (Valid)
+    :Enkripsi password;
+    :Simpan data akun ke database\n(Status: 'Menunggu Verifikasi Admin');
+    :Tampilkan pesan "Registrasi berhasil, akun menunggu\nverifikasi Admin sebelum dapat login";
+    :Arahkan pengguna ke halaman Login;
+    |Pengguna|
+    stop
+else (Tidak Valid / Email Sudah Ada)
+    :Tampilkan pesan error validasi;
+    |Pengguna|
+    stop
+endif
+@enduml

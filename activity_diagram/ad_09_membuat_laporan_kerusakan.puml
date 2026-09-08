@@ -1,0 +1,31 @@
+@startuml
+title AD-09 : Membuat Laporan Kerusakan
+skinparam style strictuml
+skinparam conditionStyle insideDiamond
+skinparam titleFontSize 14
+
+|Pengguna|
+start
+:Buka menu "Lapor Kerusakan";
+
+|Sistem|
+:Tampilkan form pelaporan kerusakan;
+
+|Pengguna|
+:Isi form pelaporan:\n1. Pilih fasilitas yang bermasalah\n2. Pilih kategori kerusakan\n3. Tulis deskripsi masalah\n4. Unggah file foto bukti;
+:Klik tombol "Kirim Laporan";
+
+|Sistem|
+:Validasi kelengkapan form & format/ukuran foto;
+if (Form lengkap & file foto valid?) then (Valid)
+    :Simpan file foto ke server;
+    :Simpan data laporan ke database (Status: 'Baru');
+    :Tampilkan notifikasi laporan berhasil dikirim;
+    |Pengguna|
+    stop
+else (Tidak Valid / Format Salah)
+    :Tampilkan pesan error validasi form / foto;
+    |Pengguna|
+    stop
+endif
+@enduml

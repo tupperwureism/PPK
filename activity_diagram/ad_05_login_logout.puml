@@ -1,0 +1,36 @@
+@startuml
+title AD-05 : Melakukan Login & Logout
+skinparam style strictuml
+skinparam conditionStyle insideDiamond
+skinparam titleFontSize 14
+
+|Pengguna|
+start
+:Buka halaman login;
+
+|Sistem|
+:Tampilkan form login;
+
+|Pengguna|
+:Masukkan email dan password;
+:Klik tombol "Login";
+
+|Sistem|
+:Verifikasi kredensial akun di database;
+if (Kredensial valid & akun aktif?) then (Valid)
+    :Buat sesi login aktif;
+    :Arahkan ke Dashboard Pengguna;
+    |Pengguna|
+    :Mengakses fitur pengguna;
+    :Klik tombol "Logout";
+    |Sistem|
+    :Hapus sesi autentikasi;
+    :Arahkan kembali ke halaman login;
+    |Pengguna|
+    stop
+else (Salah / Belum Aktif)
+    :Tampilkan pesan error kredensial;
+    |Pengguna|
+    stop
+endif
+@enduml

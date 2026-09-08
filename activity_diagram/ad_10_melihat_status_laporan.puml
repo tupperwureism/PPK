@@ -1,0 +1,23 @@
+@startuml
+title AD-10 : Melihat Status & Riwayat Laporan
+skinparam style strictuml
+skinparam titleFontSize 14
+
+|Pengguna|
+start
+:Buka menu "Status Laporan Saya";
+
+|Sistem|
+:Ambil data riwayat laporan milik pengguna dari database;
+:Tampilkan daftar laporan beserta status terkini\n(Baru / Diproses / Selesai / Ditolak);
+
+|Pengguna|
+:Klik salah satu laporan untuk melihat detail;
+
+|Sistem|
+:Tampilkan rincian laporan, foto bukti, dan catatan resolusi petugas;
+
+|Pengguna|
+:Melihat detail dan hasil penanganan;
+stop
+@enduml

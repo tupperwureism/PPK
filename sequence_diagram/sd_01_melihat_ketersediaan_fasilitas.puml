@@ -1,0 +1,57 @@
+@startuml
+title SD-01 : Melihat Ketersediaan Fasilitas (UC-03)
+skinparam style strictuml
+skinparam sequenceMessageAlign center
+skinparam titleFontSize 14
+autonumber
+
+actor "Pengguna / Pengunjung" as User
+boundary "FacilityView\n(UI / Blade)" as View
+control "FacilityController" as Controller
+entity "Facility" as FacilityModel
+entity "Reservation" as ReservationModel
+database "MySQL Database" as DB
+
+User -> View : Pilih fasilitas & tentukan tanggal
+activate View
+
+View -> Controller : getAvailability(facilityId, date)
+activate Controller
+
+Controller -> FacilityModel : find(facilityId)
+activate FacilityModel
+FacilityModel -> DB : SELECT * FROM facilities WHERE id = facilityId
+activate DB
+DB --> FacilityModel : Data Fasilitas (status, jam operasional)
+deactivate DB
+FacilityModel --> Controller : facilityInstance
+deactivate FacilityModel
+
+alt Fasilitas Tidak Ditemukan / Nonaktif
+    Controller --> View : responseJson(404, "Fasilitas tidak tersedia")
+    View --> User : Tampilkan pesan "Fasilitas tidak tersedia"
+else Fasilitas Aktif
+    Controller -> ReservationModel : getApprovedBookings(facilityId, date)
+    activate ReservationModel
+    ReservationModel -> DB : SELECT start_time, end_time FROM reservations \nWHERE facility_id = ? AND reservation_date = ? AND status = 'approved'
+    activate DB
+    DB --> ReservationModel : list[approvedSlots]
+    deactivate DB
+    ReservationModel --> Controller : approvedSlots
+    deactivate ReservationModel
+
+    Controller -> Controller : generateTimeSlots("07:00", "20:00", 30m, approvedSlots)
+    note right of Controller
+        Membuat matriks per 30 menit (07.00 - 20.00).
+        Slot yang beririsan dengan approvedSlots ditandai "Tidak Tersedia",
+        sisanya ditandai "Tersedia".
+        Identitas peminjam lain dienkapsulasi / disembunyikan.
+    end note
+
+    Controller --> View : renderSlotMatrix(slotsData)
+    deactivate Controller
+    View --> User : Tampilkan matriks ketersediaan per slot 30 menit
+    deactivate View
+end
+
+@enduml

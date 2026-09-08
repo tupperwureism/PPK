@@ -1,0 +1,24 @@
+@startuml
+title AD-01 : Melihat Daftar Fasilitas
+skinparam style strictuml
+skinparam conditionStyle insideDiamond
+skinparam titleFontSize 14
+
+|Pengguna|
+start
+:Buka menu "Daftar Fasilitas";
+
+|Sistem|
+:Ambil data fasilitas aktif dari database;
+if (Data fasilitas tersedia?) then (Ya)
+    :Tampilkan daftar fasilitas\n(Nama, Tipe, Lokasi, Kapasitas, Deskripsi);
+    |Pengguna|
+    :Melihat informasi daftar fasilitas;
+    stop
+else (Kosong)
+    |Sistem|
+    :Tampilkan pesan "Belum ada fasilitas yang tersedia";
+    |Pengguna|
+    stop
+endif
+@enduml

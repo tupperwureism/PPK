@@ -1,0 +1,59 @@
+@startuml
+title SD-04 : Membatalkan Reservasi Mandiri oleh Pengguna (UC-08)
+skinparam style strictuml
+skinparam sequenceMessageAlign center
+skinparam titleFontSize 14
+autonumber
+
+actor "Pengguna" as User
+boundary "ReservationView\n(Riwayat Page & Modal)" as View
+control "ReservationController" as Controller
+entity "Reservation" as ReservationModel
+database "MySQL Database" as DB
+
+User -> View : Klik tombol "Batalkan" pada reservasi aktif
+activate View
+
+View -> Controller : checkCancellationDeadline(reservationId)
+activate Controller
+
+Controller -> ReservationModel : find(reservationId)
+activate ReservationModel
+ReservationModel -> DB : SELECT * FROM reservations WHERE id = ? AND user_id = authId
+activate DB
+DB --> ReservationModel : reservationData
+deactivate DB
+ReservationModel --> Controller : reservationInstance
+deactivate ReservationModel
+
+Controller -> Controller : calculateTimeDifference(reservation.datetime, now())
+
+alt Melewati Batas Toleransi Waktu (Selisih < 2 Jam)
+    Controller --> View : responseJson(422, "Pembatalan ditolak: melewati batas waktu minimum 2 jam")
+    View --> User : Tampilkan pesan "Tidak dapat membatalkan karena melewati batas waktu"
+else Masih Dalam Batas Waktu Toleransi (Selisih >= 2 Jam)
+    Controller --> View : responseJson(200, "Eligible to cancel")
+    deactivate Controller
+    View --> User : Tampilkan dialog konfirmasi "Apakah Anda yakin ingin membatalkan?"
+
+    User -> View : Klik konfirmasi "Ya, Batalkan"
+
+    View -> Controller : cancel(reservationId)
+    activate Controller
+
+    Controller -> ReservationModel : updateStatus(reservationId, 'cancelled')
+    activate ReservationModel
+    ReservationModel -> DB : UPDATE reservations SET status = 'cancelled', updated_at = NOW() WHERE id = ?
+    activate DB
+    DB --> ReservationModel : affectedRows
+    deactivate DB
+    ReservationModel --> Controller : success
+    deactivate ReservationModel
+
+    Controller --> View : redirectBack()->with("Reservasi berhasil dibatalkan")
+    deactivate Controller
+    View --> User : Notifikasi sukses pembatalan & slot waktu otomatis bebas
+    deactivate View
+end
+
+@enduml

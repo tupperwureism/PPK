@@ -1,0 +1,36 @@
+@startuml
+title AD-08 : Membatalkan Reservasi
+skinparam style strictuml
+skinparam conditionStyle insideDiamond
+skinparam titleFontSize 14
+
+|Pengguna|
+start
+:Buka daftar riwayat reservasi;
+:Pilih reservasi aktif & klik "Batalkan";
+
+|Sistem|
+:Cek batas waktu pembatalan (Deadline rule);
+if (Waktu saat ini masih sebelum batas toleransi?) then (Valid)
+    :Tampilkan dialog konfirmasi pembatalan;
+    |Pengguna|
+    if (Konfirmasi batalkan reservasi?) then (Ya)
+        |Sistem|
+        :Perbarui status reservasi menjadi 'Dibatalkan';
+        :Bebaskan slot jadwal fasilitas di database;
+        :Tampilkan notifikasi sukses pembatalan;
+        |Pengguna|
+        stop
+    else (Batal / Tutup)
+        |Sistem|
+        :Tutup dialog tanpa mengubah data;
+        |Pengguna|
+        stop
+    endif
+else (Melewati batas waktu)
+    |Sistem|
+    :Tampilkan pesan "Tidak dapat membatalkan karena melewati batas waktu";
+    |Pengguna|
+    stop
+endif
+@enduml

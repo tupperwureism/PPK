@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Use Case Scenarios - Projek PPK 2026</title>
+<style>
+  body { font-family: Arial, Helvetica, sans-serif; color: #000000; line-height: 1.5; padding: 20px; background-color: #ffffff; }
+  h2 { color: #1a365d; margin-top: 30px; margin-bottom: 10px; font-size: 16pt; }
+  table { width: 100%; border-collapse: collapse; margin-bottom: 25px; font-size: 11pt; }
+  th, td { border: 1px solid #333333; padding: 10px 12px; vertical-align: top; }
+  th { background-color: #f2f2f2; text-align: left; width: 25%; font-weight: bold; }
+  td { background-color: #ffffff; width: 75%; }
+  ul, ol { margin: 0; padding-left: 20px; }
+  li { margin-bottom: 5px; }
+</style>
+</head>
+<body>
+<h1 style="text-align: center; color: #1a365d;">SKENARIO USE CASE (AKTOR PENGGUNA)<br><span style="font-size: 14pt; font-weight: normal;">Sistem Reservasi & Pelaporan Fasilitas Kampus - PPK 2026</span></h1>
+<hr style="margin-bottom: 25px;">
+
+<h2>Tabel UC-01: Melihat Daftar Fasilitas</h2>
+<table>
+  <tr><th>Use Case</th><td><strong>UC-01: Melihat Daftar Fasilitas</strong></td></tr>
+  <tr><th>Pre-condition</th><td><ul><li>• Pengunjung/Pengguna telah membuka web platform fasilitas kampus.
+• Sistem telah terhubung ke database fasilitas.</li></ul></td></tr>
+  <tr><th>Post-condition</th><td><ul><li>• Sistem menampilkan daftar fasilitas yang tersedia kepada pengunjung/pengguna.</li></ul></td></tr>
+  <tr><th>Basic path</th><td><ol><li>Pengguna mengakses halaman/menu fasilitas.
+2. Sistem mengambil data fasilitas dari database.
+3. Sistem menampilkan daftar fasilitas beserta informasi seperti nama, tipe, lokasi, kapasitas, dan deskripsi.
+4. Pengguna dapat melihat daftar fasilitas yang tersedia.</li></ol></td></tr>
+  <tr><th>Alternative path</th><td><ul><li>• Pengguna dapat melanjutkan ke proses pencarian fasilitas berdasarkan kebutuhan.</li></ul></td></tr>
+  <tr><th>Exceptional path</th><td><ul><li>• Jika data fasilitas tidak tersedia, sistem menampilkan notifikasi bahwa belum terdapat fasilitas yang dapat ditampilkan.</li></ul></td></tr>
+</table>
+
+<h2>Tabel UC-02: Mencari Fasilitas</h2>
+<table>
+  <tr><th>Use Case</th><td><strong>UC-02: Mencari Fasilitas</strong></td></tr>
+  <tr><th>Pre-condition</th><td><ul><li>• Pengunjung/Pengguna telah membuka halaman daftar fasilitas.
+• Sistem telah terhubung ke database fasilitas.</li></ul></td></tr>
+  <tr><th>Post-condition</th><td><ul><li>• Sistem menampilkan fasilitas yang sesuai dengan kata kunci atau filter pencarian.</li></ul></td></tr>
+  <tr><th>Basic path</th><td><ol><li>Pengguna memasukkan kata kunci pencarian atau memilih filter.
+2. Pengguna dapat menggunakan filter berdasarkan tipe, lokasi, atau kapasitas.
+3. Sistem memproses kata kunci/filter yang diberikan.
+4. Sistem menampilkan daftar fasilitas yang sesuai dengan kriteria pencarian.</li></ol></td></tr>
+  <tr><th>Alternative path</th><td><ul><li>• Pengguna mengosongkan kata kunci/filter.
+• Sistem mengembalikan tampilan ke seluruh fasilitas yang tersedia.</li></ul></td></tr>
+  <tr><th>Exceptional path</th><td><ul><li>• Jika tidak terdapat fasilitas yang sesuai dengan kriteria pencarian, sistem menampilkan notifikasi: "Fasilitas tidak ditemukan".</li></ul></td></tr>
+</table>
+
+<h2>Tabel UC-03: Melihat Ketersediaan Fasilitas</h2>
+<table>
+  <tr><th>Use Case</th><td><strong>UC-03: Melihat Ketersediaan Fasilitas</strong></td></tr>
+  <tr><th>Pre-condition</th><td><ul><li>• Pengunjung/Pengguna telah melihat daftar fasilitas.
+• Pengguna telah memilih fasilitas yang ingin diperiksa.
+• Sistem memiliki data jadwal reservasi fasilitas.</li></ul></td></tr>
+  <tr><th>Post-condition</th><td><ul><li>• Sistem menampilkan status ketersediaan fasilitas berdasarkan tanggal dan slot waktu yang dipilih tanpa menampilkan data pemohon lain.</li></ul></td></tr>
+  <tr><th>Basic path</th><td><ol><li>Pengguna memilih salah satu fasilitas.
+2. Pengguna memilih tanggal yang ingin diperiksa.
+3. Sistem menampilkan slot waktu operasional 07.00–20.00 dengan interval 30 menit.
+4. Sistem memeriksa data reservasi pada fasilitas tersebut.
+5. Sistem menampilkan status setiap slot sebagai Tersedia atau Tidak Tersedia.</li></ol></td></tr>
+  <tr><th>Alternative path</th><td><ul><li>• Pengguna memilih tanggal lain.
+• Sistem memperbarui status ketersediaan berdasarkan tanggal yang dipilih.</li></ul></td></tr>
+  <tr><th>Exceptional path</th><td><ul><li>• Jika terjadi gangguan saat mengambil data jadwal, sistem menampilkan notifikasi bahwa data ketersediaan tidak dapat ditampilkan dan meminta mencoba kembali.</li></ul></td></tr>
+</table>
+
+<h2>Tabel UC-04: Melakukan Registrasi Akun</h2>
+<table>
+  <tr><th>Use Case</th><td><strong>UC-04: Melakukan Registrasi Akun</strong></td></tr>
+  <tr><th>Pre-condition</th><td><ul><li>• Pengguna belum memiliki akun dan berada di halaman Registrasi.</li></ul></td></tr>
+  <tr><th>Post-condition</th><td><ul><li>• Data akun baru berhasil tersimpan di database dengan status Menunggu Verifikasi Admin dan password terenkripsi.</li></ul></td></tr>
+  <tr><th>Basic path</th><td><ol><li>Pengguna membuka form Registrasi Akun.
+2. Pengguna mengisi data lengkap (Nama Lengkap, Email Kampus, Password, Konfirmasi Password, dan Kategori: Mahasiswa/Dosen/Staf).
+3. Pengguna menekan tombol "Daftar".
+4. Sistem melakukan validasi format data di sisi client dan server.
+5. Sistem menyimpan data akun baru ke database dengan status 'Menunggu Verifikasi Admin'.
+6. Sistem menampilkan pesan bahwa registrasi berhasil dan akun menunggu verifikasi Admin sebelum dapat login, lalu mengarahkan pengguna ke halaman Login.</li></ol></td></tr>
+  <tr><th>Alternative path</th><td><ul><li>• Pada langkah 2, pengguna menekan tautan "Sudah punya akun? Login di sini", sistem langsung mengarahkan pengguna ke halaman Login.</li></ul></td></tr>
+  <tr><th>Exceptional path</th><td><ul><li>• Pada langkah 4, jika email sudah pernah terdaftar, sistem menolak pendaftaran dan menampilkan pesan: "Email sudah terdaftar".
+• Pada langkah 4, jika password dan konfirmasi password tidak cocok atau ada field kosong, sistem menampilkan pesan peringatan validasi pada form.</li></ul></td></tr>
+</table>
+
+<h2>Tabel UC-05: Melakukan Login & Logout</h2>
+<table>
+  <tr><th>Use Case</th><td><strong>UC-05: Melakukan Login & Logout</strong></td></tr>
+  <tr><th>Pre-condition</th><td><ul><li>• Untuk Login: Akun pengguna telah terdaftar dan berstatus aktif.
+• Untuk Logout: Pengguna sedang berada dalam sesi login aktif.</li></ul></td></tr>
+  <tr><th>Post-condition</th><td><ul><li>• Untuk Login: Sesi autentikasi aktif dibuat dan pengguna masuk ke Dashboard.
+• Untuk Logout: Sesi autentikasi dihapus dan hak akses khusus dicabut.</li></ul></td></tr>
+  <tr><th>Basic path</th><td><ol><li>Pengguna membuka halaman Login.
+2. Pengguna memasukkan Email dan Password, lalu menekan tombol "Login".
+3. Sistem memverifikasi kredensial akun ke database.
+4. Sistem membuat sesi pengguna dan mengarahkan ke halaman Dashboard Utama.
+5. Saat selesai menggunakan sistem, pengguna menekan tombol "Logout".
+6. Sistem menghancurkan (destroy) sesi login dan mengarahkan kembali ke halaman Login.</li></ol></td></tr>
+  <tr><th>Alternative path</th><td><ul><li>-</li></ul></td></tr>
+  <tr><th>Exceptional path</th><td><ul><li>• Pada langkah 3, jika kombinasi email atau password salah, sistem menampilkan notifikasi error: "Email atau password salah".
+• Pada langkah 3, jika akun belum diverifikasi oleh Admin, sistem menampilkan pesan: "Akun Anda masih menunggu verifikasi Admin".</li></ul></td></tr>
+</table>
+
+<h2>Tabel UC-06: Mengajukan Reservasi Fasilitas</h2>
+<table>
+  <tr><th>Use Case</th><td><strong>UC-06: Mengajukan Reservasi Fasilitas</strong></td></tr>
+  <tr><th>Pre-condition</th><td><ul><li>• Pengguna telah berhasil login ke sistem.
+• Fasilitas yang dipilih berstatus aktif (tidak sedang dalam perbaikan).</li></ul></td></tr>
+  <tr><th>Post-condition</th><td><ul><li>• Pengajuan reservasi tersimpan di database dengan status Menunggu Persetujuan.</li></ul></td></tr>
+  <tr><th>Basic path</th><td><ol><li>Pengguna memilih fasilitas yang ingin dipesan dari katalog.
+2. Pengguna mengisi form reservasi: memilih tanggal penggunaan, Start Time, End Time, dan menuliskan tujuan penggunaan.
+3. Pengguna menekan tombol "Ajukan Reservasi".
+4. Sistem melakukan validasi server-side:
+   a. Memeriksa jam berada dalam rentang 07.00–20.00.
+   b. Memeriksa waktu kelipatan slot 30 menit.
+   c. Memeriksa tidak ada bentrok jadwal dengan reservasi yang disetujui.
+5. Sistem menyimpan data ke tabel Reservations dengan status Menunggu Persetujuan.
+6. Sistem menampilkan notifikasi sukses dan mengarahkan ke halaman Riwayat Reservasi.</li></ol></td></tr>
+  <tr><th>Alternative path</th><td><ul><li>• Pada langkah 2, pengguna dapat membatalkan pengisian dan kembali ke halaman katalog tanpa menyimpan data.</li></ul></td></tr>
+  <tr><th>Exceptional path</th><td><ul><li>• Pada langkah 4, jika slot waktu yang dipilih sudah terpesan/bentrok, sistem menolak dan menampilkan pesan: "Slot waktu tersebut sudah terisi, silakan pilih waktu lain".
+• Pada langkah 4, jika waktu di luar jam operasional (sebelum 07.00 / setelah 20.00) atau bukan kelipatan 30 menit, sistem menampilkan pesan error validasi waktu.</li></ul></td></tr>
+</table>
+
+<h2>Tabel UC-07: Melihat Riwayat & Status Reservasi</h2>
+<table>
+  <tr><th>Use Case</th><td><strong>UC-07: Melihat Riwayat & Status Reservasi</strong></td></tr>
+  <tr><th>Pre-condition</th><td><ul><li>• Pengguna telah login ke dalam sistem.</li></ul></td></tr>
+  <tr><th>Post-condition</th><td><ul><li>• Daftar seluruh reservasi milik pengguna ditampilkan lengkap beserta status dan detailnya.</li></ul></td></tr>
+  <tr><th>Basic path</th><td><ol><li>Pengguna memilih menu "Riwayat Reservasi".
+2. Sistem mengambil seluruh data pemesanan milik pengguna yang bersangkutan dari database.
+3. Sistem menampilkan tabel daftar reservasi yang memuat: Fasilitas, Tanggal, Jam, Tujuan, dan Badge Status (Menunggu Persetujuan, Disetujui, Ditolak, Dibatalkan).
+4. Pengguna mengklik salah satu baris reservasi.
+5. Sistem menampilkan modal pop-up detail lengkap reservasi (termasuk alasan penolakan jika status ditolak).</li></ol></td></tr>
+  <tr><th>Alternative path</th><td><ul><li>• Pada langkah 3, pengguna dapat menggunakan fitur filter berdasarkan status (misal: hanya melihat yang 'Disetujui').</li></ul></td></tr>
+  <tr><th>Exceptional path</th><td><ul><li>• Pada langkah 2, jika pengguna belum pernah membuat reservasi sama sekali, sistem menampilkan pesan: "Belum ada riwayat reservasi".</li></ul></td></tr>
+</table>
+
+<h2>Tabel UC-08: Membatalkan Reservasi</h2>
+<table>
+  <tr><th>Use Case</th><td><strong>UC-08: Membatalkan Reservasi</strong></td></tr>
+  <tr><th>Pre-condition</th><td><ul><li>• Pengguna telah login.
+• Reservasi yang dipilih milik pengguna sendiri dan berstatus Menunggu Persetujuan atau Disetujui.</li></ul></td></tr>
+  <tr><th>Post-condition</th><td><ul><li>• Status reservasi di database berubah menjadi Dibatalkan dan slot waktu jadwal kembali berstatus Tersedia.</li></ul></td></tr>
+  <tr><th>Basic path</th><td><ol><li>Pengguna membuka halaman "Riwayat Reservasi".
+2. Pengguna memilih reservasi aktif yang ingin dibatalkan dan menekan tombol "Batalkan".
+3. Sistem memeriksa aturan batas waktu pembatalan (deadline rule).
+4. Sistem menampilkan dialog konfirmasi pembatalan.
+5. Pengguna menekan tombol "Ya, Batalkan".
+6. Sistem memperbarui status reservasi menjadi Dibatalkan dan melepaskan slot jadwal di database.
+7. Sistem menampilkan notifikasi sukses pembatalan.</li></ol></td></tr>
+  <tr><th>Alternative path</th><td><ul><li>• Pada langkah 4, pengguna menekan tombol "Batal / Kembali", sistem menutup dialog konfirmasi dan tidak melakukan perubahan status.</li></ul></td></tr>
+  <tr><th>Exceptional path</th><td><ul><li>• Pada langkah 3, jika waktu pembatalan sudah melewati batas toleransi yang ditentukan, sistem menolak aksi dan menampilkan pesan: "Reservasi tidak dapat dibatalkan karena sudah melewati batas waktu minimum".</li></ul></td></tr>
+</table>
+
+<h2>Tabel UC-09: Membuat Laporan Kerusakan</h2>
+<table>
+  <tr><th>Use Case</th><td><strong>UC-09: Membuat Laporan Kerusakan</strong></td></tr>
+  <tr><th>Pre-condition</th><td><ul><li>• Pengguna telah login ke dalam sistem.</li></ul></td></tr>
+  <tr><th>Post-condition</th><td><ul><li>• Laporan kerusakan dan berkas foto bukti tersimpan di database dengan status Baru.</li></ul></td></tr>
+  <tr><th>Basic path</th><td><ol><li>Pengguna membuka menu "Lapor Kerusakan".
+2. Sistem menampilkan formulir pelaporan kerusakan.
+3. Pengguna memilih fasilitas yang rusak, memilih kategori kerusakan, menuliskan deskripsi kronologi/masalah, dan mengunggah (upload) foto bukti.
+4. Pengguna menekan tombol "Kirim Laporan".
+5. Sistem memvalidasi kelengkapan isian form dan format berkas foto di sisi server.
+6. Sistem menyimpan file foto ke direktori server dan menyimpan data laporan ke database dengan status Baru.
+7. Sistem menampilkan notifikasi bahwa laporan berhasil dikirim ke petugas.</li></ol></td></tr>
+  <tr><th>Alternative path</th><td><ul><li>-</li></ul></td></tr>
+  <tr><th>Exceptional path</th><td><ul><li>• Pada langkah 5, jika pengguna tidak melampirkan foto atau ukuran file melebihi batas (misal > 2MB) atau format bukan gambar (bukan jpg/png), sistem menampilkan error: "Format file tidak valid atau ukuran file terlalu besar".</li></ul></td></tr>
+</table>
+
+<h2>Tabel UC-10: Melihat Status & Riwayat Laporan</h2>
+<table>
+  <tr><th>Use Case</th><td><strong>UC-10: Melihat Status & Riwayat Laporan</strong></td></tr>
+  <tr><th>Pre-condition</th><td><ul><li>• Pengguna telah login ke dalam sistem.</li></ul></td></tr>
+  <tr><th>Post-condition</th><td><ul><li>• Daftar riwayat laporan kerusakan milik pengguna ditampilkan lengkap beserta status dan catatan resolusi petugas.</li></ul></td></tr>
+  <tr><th>Basic path</th><td><ol><li>Pengguna membuka menu "Status Laporan Saya".
+2. Sistem mengambil seluruh data laporan yang diajukan oleh pengguna tersebut.
+3. Sistem menampilkan daftar laporan beserta status penanganannya (Baru, Diproses, Selesai, Ditolak).
+4. Pengguna mengklik salah satu laporan untuk melihat detail.
+5. Sistem menampilkan detail laporan, foto yang diunggah, serta catatan resolusi/tindakan perbaikan dari petugas jika status sudah Selesai atau Ditolak.</li></ol></td></tr>
+  <tr><th>Alternative path</th><td><ul><li>-</li></ul></td></tr>
+  <tr><th>Exceptional path</th><td><ul><li>• Pada langkah 2, jika pengguna belum pernah membuat laporan kerusakan, sistem menampilkan pesan: "Belum ada riwayat laporan kerusakan".</li></ul></td></tr>
+</table>
+</body></html>

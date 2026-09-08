@@ -1,0 +1,83 @@
+@startuml
+title SD-03 : Mengajukan Reservasi Fasilitas dengan Validasi Anti-Bentrok (UC-06)
+skinparam style strictuml
+skinparam sequenceMessageAlign center
+skinparam titleFontSize 14
+autonumber
+
+actor "Pengguna" as User
+boundary "ReservationView\n(Form Booking)" as View
+control "ReservationController" as Controller
+control "ConflictValidator" as Validator
+entity "Facility" as FacilityModel
+entity "Reservation" as ReservationModel
+database "MySQL Database" as DB
+
+User -> View : Isi form (Fasilitas, Tanggal, Start Time, End Time, Tujuan) & Klik "Ajukan"
+activate View
+
+View -> Controller : store(StoreReservationRequest)
+activate Controller
+
+== Tahap 1: Validasi Format & Jam Operasional ==
+Controller -> Controller : validateOperatingHours & 30MinInterval(start_time, end_time)
+
+alt Di Luar Jam (Bukan 07.00-20.00) ATAU Bukan Kelipatan 30 Menit
+    Controller --> View : redirectBackWithErrors("Waktu harus 07.00-20.00 & kelipatan 30m")
+    View --> User : Tampilkan pesan error aturan waktu
+else Format Waktu Valid
+    == Tahap 2: Validasi Status Ketersediaan Fasilitas ==
+    Controller -> FacilityModel : find(facilityId)
+    activate FacilityModel
+    FacilityModel -> DB : SELECT status FROM facilities WHERE id = facilityId
+    activate DB
+    DB --> FacilityModel : status
+    deactivate DB
+    FacilityModel --> Controller : facilityStatus
+    deactivate FacilityModel
+
+    alt Fasilitas Sedang 'Dalam Perbaikan' / Nonaktif
+        Controller --> View : redirectBackWithErrors("Fasilitas sedang tidak dapat dipinjam")
+        View --> User : Tampilkan peringatan fasilitas dalam perbaikan
+    else Fasilitas Aktif
+        == Tahap 3: Validasi Pencegahan Bentrok Jadwal (Anti-Collision Server-Side) ==
+        Controller -> Validator : checkConflict(facilityId, date, startTime, endTime)
+        activate Validator
+
+        Validator -> ReservationModel : countOverlappingApproved(facilityId, date, startTime, endTime)
+        activate ReservationModel
+        ReservationModel -> DB : SELECT COUNT(*) FROM reservations \nWHERE facility_id = ? AND reservation_date = ? AND status = 'approved' \nAND (start_time < ? AND end_time > ?)
+        activate DB
+        DB --> ReservationModel : count (integer)
+        deactivate DB
+        ReservationModel --> Validator : conflictCount
+        deactivate ReservationModel
+
+        alt conflictCount > 0 (Bentrok Terdeteksi)
+            Validator --> Controller : hasConflict = true
+            deactivate Validator
+            Controller --> View : redirectBackWithErrors("Slot waktu tersebut sudah terisi, silakan pilih waktu lain")
+            View --> User : Tampilkan notifikasi error jadwal bentrok
+        else conflictCount == 0 (Tersedia Bebas Bentrok)
+            Validator --> Controller : hasConflict = false
+            deactivate Validator
+
+            == Tahap 4: Penyimpanan Reservasi Berstatus Pending ==
+            Controller -> ReservationModel : create(userId, facilityId, date, startTime, endTime, purpose, status='pending')
+            activate ReservationModel
+            ReservationModel -> DB : INSERT INTO reservations (user_id, facility_id, reservation_date, start_time, end_time, purpose, status) \nVALUES (?, ?, ?, ?, ?, ?, 'pending')
+            activate DB
+            DB --> ReservationModel : newReservationId
+            deactivate DB
+            ReservationModel --> Controller : reservationInstance
+            deactivate ReservationModel
+
+            Controller --> View : redirect('/my-reservations')->with("Reservasi berhasil diajukan (Menunggu Persetujuan)")
+            deactivate Controller
+            View --> User : Tampilkan pesan sukses & tampilkan di daftar riwayat
+            deactivate View
+        end
+    end
+end
+
+@enduml

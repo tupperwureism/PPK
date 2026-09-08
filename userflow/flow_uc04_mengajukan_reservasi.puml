@@ -1,0 +1,62 @@
+@startuml
+skinparam defaultTextAlignment center
+skinparam roundcorner 12
+skinparam shadowing false
+skinparam ArrowColor #5D6D7E
+skinparam ArrowFontSize 10
+
+skinparam rectangle {
+    BackgroundColor #FFFFFF
+    BorderColor #BDC3C7
+    BorderThickness 1.5
+    FontName Arial
+    FontSize 11
+}
+
+skinparam card {
+    BackgroundColor #FEF9E7
+    BorderColor #F1C40F
+    BorderThickness 1.5
+    FontName Arial
+    FontSize 11
+    FontStyle bold
+}
+
+skinparam database {
+    BackgroundColor #2C3E50
+    BorderColor #1A252F
+    FontColor white
+    FontName Arial
+    FontSize 11
+    FontStyle bold
+}
+
+' Row 1: Input Form
+rectangle "<color:white><b>Start</b></color>" as Start #4D6BFE
+rectangle "Pilih Fasilitas &\nBuka Form Reservasi" as Step_1
+rectangle "Input Tanggal, Waktu (Slot 30m),\ndan Tujuan Penggunaan" as Step_2 #FAD7A0
+rectangle "Klik 'Ajukan\nReservasi'" as Step_3
+card "◇ Server Validasi:\n07.00-20.00, Slot 30m,\n& Bebas Bentrok?" as Dec_1
+
+' Row 2: Simpan & Selesai
+database "Database\nReservasi" as DB_Reserve
+rectangle "Simpan Data Reservasi\n(Status: 'Menunggu')" as Step_4 #FAD7A0
+rectangle "Tampilkan Notifikasi Sukses\nDiajukan ke Petugas" as Step_5 #D4EFDF;line:27AE60
+rectangle "Tampilkan Pesan Error:\nJadwal Bentrok / Diluar Jam" as Step_Err #FDEDEC;line:E74C3C
+rectangle "<color:white><b>End</b></color>" as End #4D6BFE
+
+' Row 1
+Start -right-> Step_1
+Step_1 -right-> Step_2
+Step_2 -right-> Step_3
+Step_3 -right-> Dec_1
+
+' Down to Row 2
+Dec_1 -down-> Step_4 : Valid
+Step_4 -right-> DB_Reserve
+DB_Reserve -right-> Step_5
+Step_5 -right-> End
+
+Dec_1 -right-> Step_Err : Bentrok / Invalid
+Step_Err -down-> End
+@enduml

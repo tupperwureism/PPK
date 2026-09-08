@@ -1,0 +1,15 @@
+# File Sampah Sistem Operasi (Windows & Mac)
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+
+# Cache & Pengaturan Lokal Editor
+.vscode/*
+!.vscode/settings.json
+*.swp
+*.bak
+
+# File Log atau Temporary
+*.log
