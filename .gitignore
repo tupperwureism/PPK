@@ -13,3 +13,6 @@ $RECYCLE.BIN/
 
 # File Log atau Temporary
 *.log
+
+TECHNICAL_DEBT.md
+.env
