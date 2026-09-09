@@ -1,4 +1,0 @@
-interface:
-  display_name: "Justifiqa Prompt Master"
-  short_description: "Decision-complete technical delegation prompts"
-  default_prompt: "Use $justifiqa-prompt-master to create a decision-complete implementation prompt for this Justifiqa batch."
